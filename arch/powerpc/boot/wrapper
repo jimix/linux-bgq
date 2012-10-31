@@ -214,6 +214,11 @@ ps3)
     make_space=n
     pie=
     ;;
+bgq)
+    platformo="$object/bgq-head.o $object/bgq.o"
+    gzip=
+    link_address='0x00a00000'
+    ;;
 ep88xc|ep405|ep8248e)
     platformo="$object/fixed-head.o $object/$platform.o"
     binary=y
@@ -438,5 +443,12 @@ ps3)
     odir="$(dirname "$ofile.bin")"
     rm -f "$odir/otheros.bld"
     gzip -n --force -9 --stdout "$ofile.bin" > "$odir/otheros.bld"
+    ;;
+bgq*)
+    mv "$ofile" "$ofile".32
+    ${CROSS}objcopy -O elf64-powerpc --set-start=$link_address	\
+	--change-section-address .text.bgq_tramp=0		\
+	"$ofile".32 "$ofile" || 				\
+	echo "ERROR: Your binutils is too old (>=2.21.1)"
     ;;
 esac
