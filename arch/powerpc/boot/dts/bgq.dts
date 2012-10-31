@@ -1,0 +1,448 @@
+/dts-v1/;
+
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	epapr-version = "ePAPR-1.0";
+	model = "ibm,bluegeneq";
+	compatible = "ibm,bluegeneq";
+
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x0 0x0 0x0>;
+	};
+
+	chosen {
+		bootargs =
+	"root=/dev/ram0 rdinit=/sbin/init raid=noautodetect loglevel=7";
+
+		/*
+		 * the BGQ wrapper locates a ramdisk and updates
+		 * initrd-start/end
+		 */
+		linux,initrd-start = <0>;
+		linux,initrd-end = <0>;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+                cpu@0 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <0>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <0 1 2 3>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@4 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <4>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <4 5 6 7>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@8 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <8>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <8 9 10 11>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+		};
+
+                cpu@12 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <12>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <12 13 14 15>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+		};
+
+                cpu@16 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <16>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <16 17 18 19>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@20 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <20>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <20 21 22 23>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@24 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <24>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <24 25 26 27>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@28 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <28>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <28 29 30 31>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@32 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <32>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <32 33 34 35>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@36 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <36>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <36 37 38 39>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@40 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <40>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <40 41 42 43>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@44 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <44>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <44 45 46 47>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@48 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <48>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <48 49 50 51>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@52 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <52>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <52 53 54 55>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@56 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <56>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <56 57 58 59>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@60 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <60>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <60 61 62 63>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+
+                cpu@64 {
+			64-bit;
+                        model = "PowerPC,A2";
+                        compatible = "ibm,A2";
+                        device_type = "cpu";
+                        reg = <64>;
+                        status = "okay";
+                        d-cache-size = <0x4000>;
+                        d-cache-block-size = <64>;
+                        d-cache-sets = <32>;
+                        i-cache-size = <0x4000>;
+                        i-cache-block-size = <64>;
+                        i-cache-sets = <64>;
+                        ibm,ppc-interrupt-server#s = <64 65 66 67>;
+                        enable-method = "ibm,bgq-spintable";
+                        clock-frequency = <160000000>;
+                        timebase-frequency = <1600000000>;
+                };
+	};
+
+	blue_gene_q {
+		reg = <0x300 0x0 0x100 0x0>;
+		#address-cells = <2>;
+		#size-cells = <2>;
+		compatible = "ibm,bgq-soc";
+		ranges;
+		interrupt-parent = <&BIC>;
+
+		DCR: dcr_bridge {
+			dcr-mmio-range = <0x3ff 0xe0000000 0x0 0x08000000>;
+			compatible = "ibm,bgq-dcr";
+			dcr-controller;
+			dcr-access-method = "mmio";
+			dcr-mmio-stride = <0x8>;
+		};
+
+		memory_unit {
+			compatible = "ibm,bgq-mu";
+			dcr-parent = <&DCR>;
+			dcr-reg = <0x000e0000 0xf45>;
+		};
+
+		/* Just use the priviledge address */
+		BIC: interrupt-controller {
+			reg = <0x3ff 0xe8000000 0x0 0x10000>;
+			compatible = "ibm,bgq-bic";
+			built-in;
+			interrupt-controller;
+			#interrupt-cells = <2>;
+			interrupt-ranges = <0 13>;
+			/* The BIC has its own DCR bridge */
+			dcr-controller;
+			dcr-mmio-range = <0x3ff 0xfe410000 0x0 0x320>;
+			dcr-access-method = "mmio";
+			dcr-mmio-stride = <0x8>;
+			dcr-reg = <0x0 0x63>;
+		};
+		msi {
+			compatible = "ibm,bgq-msi";
+			reg = <0x3ff 0xfdc00000 0x0 0x100>;
+			msi-interrupt-ranges = <0 256>;
+		};
+		mailbox {
+			compatible = "ibm,bgq-mailbox", "ibm,bgq-testint";
+			interrupt-parent = <&BIC>;
+			interrupts = <12 1>;
+			dcr-parent = <&DCR>;
+			dcr-reg = <0x000c8000 0x2002>;
+		};
+		devbus {
+			compatible = "ibm,bgq-devbus";
+			dcr-parent = <&DCR>;
+			dcr-reg = <0x000cc000 0x3c>;
+		};
+		bedram {
+			compatible = "ibm,bgq-bedram";
+			reg = <0x000003ff 0xfffc0000 0x0 0x40000>;
+		};
+		pciex@3fffd000000 {
+			/* Config space access */
+			reg = <0x000003ff 0xfd000000 0x00000000 0x00800000>;
+			device_type = "pciex";
+			#interrupt-cells = <1>;
+			#size-cells = <2>;
+			#address-cells = <3>;
+			compatible = "ibm,bgq-pciex";
+			dcr-parent = <&DCR>;
+			dcr-reg = <0x000d0000 0x200>;
+			interrupt-parent = <&BIC>;
+			ranges = <
+				/* 64K I/O space at PCI address 0 */
+				0x01000000 0x00000000 0x00000000
+				0x000003fd 0xfd800000 0x00000000 0x00010000
+				/*
+				 * 1GB memory spaces non-prefetchable and
+				 * prefetchable
+				 */
+				0x03000000 0x00000000 0x80000000
+				0x000003fc 0x80000000 0x00000000 0x40000000
+				0x43000000 0x00000000 0xc0000000
+				0x000003fc 0xc0000000 0x00000000 0x40000000 >;
+
+			bus-range = <0x00 0xff>;
+
+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+			interrupt-map = <
+				 0x0000 0 0 1 &BIC 1 1
+				 0x0000 0 0 2 &BIC 2 1
+				 0x0000 0 0 3 &BIC 3 1
+				 0x0000 0 0 4 &BIC 4 1 >;
+                };
+
+	};
+};

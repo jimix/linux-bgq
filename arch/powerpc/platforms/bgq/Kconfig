@@ -1,0 +1,8 @@
+config PPC_BGQ
+	bool "IBM Blue Gene/Q"
+	select PPC_A2
+	select GENERIC_TBSYNC
+	select PCI_CHOICE
+	select PPC_A2_DD2
+	select SCHED_SMT
+	default n

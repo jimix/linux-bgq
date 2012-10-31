@@ -48,6 +48,8 @@ $(obj)/treeboot-iss4xx.o: BOOTCFLAGS += -mcpu=405
 $(obj)/treeboot-currituck.o: BOOTCFLAGS += -mcpu=405
 $(obj)/virtex405-head.o: BOOTAFLAGS += -mcpu=405
 
+$(obj)/bgq-head.o: BOOTAFLAGS += -DCONFIG_KERNEL_START=$(CONFIG_KERNEL_START)
+
 
 zlib       := inffast.c inflate.c inftrees.c
 zlibheader := inffast.h inffixed.h inflate.h inftrees.h infutil.h
@@ -81,6 +83,7 @@ src-plat := of.c cuboot-52xx.c cuboot-824x.c cuboot-83xx.c cuboot-85xx.c holly.c
 		virtex405-head.S virtex.c redboot-83xx.c cuboot-sam440ep.c \
 		cuboot-acadia.c cuboot-amigaone.c cuboot-kilauea.c \
 		gamecube-head.S gamecube.c wii-head.S wii.c treeboot-iss4xx.c \
+		bgq-head.S bgq.c \
 		treeboot-currituck.c
 src-boot := $(src-wlib) $(src-plat) empty.c
 
@@ -186,6 +189,7 @@ image-$(CONFIG_PPC_HOLLY)		+= dtbImage.holly
 image-$(CONFIG_PPC_PRPMC2800)		+= dtbImage.prpmc2800
 image-$(CONFIG_DEFAULT_UIMAGE)		+= uImage
 image-$(CONFIG_EPAPR_BOOT)		+= zImage.epapr
+image-$(CONFIG_PPC_BGQ)			+= dtbImage.bgq
 
 #
 # Targets which embed a device tree blob
