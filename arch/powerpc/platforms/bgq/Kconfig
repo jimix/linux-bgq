@@ -1,8 +1,11 @@
 config PPC_BGQ
 	bool "IBM Blue Gene/Q"
+	depends on PPC_BOOK3E_64
 	select PPC_A2
 	select GENERIC_TBSYNC
 	select PCI_CHOICE
-	select PPC_A2_DD2
-	select SCHED_SMT
+	select SCHED_SMT if SMP
+	select PPC_DCR_MMIO
+	select PPC_SMP_MUXED_IPI if SMP
+	select HVC_BGQ
 	default n

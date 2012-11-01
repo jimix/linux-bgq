@@ -2077,6 +2077,25 @@ static struct cpu_spec __initdata cpu_specs[] = {
 		.machine_check		= machine_check_generic,
 		.platform		= "ppca2",
 	},
+	{	/* BGQ A2 (>= DD2) + QPX/FPU core */
+		.pvr_mask		= 0xffff0000,
+		.pvr_value		= 0x00490000,
+		.cpu_name		= "BGQ A2 (>= DD2)",
+		/* The core supports ICSWX and DBELL but the chip does not */
+		.cpu_features		= ((CPU_FTRS_A2) &
+					   ~(CPU_FTR_ICSWX | CPU_FTR_DBELL)),
+		.cpu_user_features	= COMMON_USER_PPC64,
+		/* The core supports TLBIVAX but the chip does not */
+		.mmu_features		= ((MMU_FTRS_A2) &
+					   ~(MMU_FTR_USE_TLBIVAX_BCAST)),
+		.icache_bsize		= 64,
+		.dcache_bsize		= 64,
+		.num_pmcs		= 0,
+		.cpu_setup		= __setup_cpu_a2,
+		.cpu_restore		= __restore_cpu_a2,
+		.machine_check		= machine_check_generic,
+		.platform		= "ppca2",
+	},
 #endif /* CONFIG_PPC_A2 */
 	{	/* This is a default entry to get going, to be replaced by
 		 * a real one at some stage
