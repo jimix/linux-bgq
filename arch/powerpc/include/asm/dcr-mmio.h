@@ -44,11 +44,23 @@ static inline u32 dcr_read_mmio(dcr_host_mmio_t host, unsigned int dcr_n)
 	return in_be32(host.token + ((host.base + dcr_n) * host.stride));
 }
 
+static inline u64 dcr_read_mmio64(dcr_host_mmio_t host, unsigned int dcr_n)
+{
+	return in_be64(host.token + ((host.base + dcr_n) * host.stride));
+}
+
 static inline void dcr_write_mmio(dcr_host_mmio_t host,
 				  unsigned int dcr_n,
 				  u32 value)
 {
 	out_be32(host.token + ((host.base + dcr_n) * host.stride), value);
+}
+
+static inline void dcr_write_mmio64(dcr_host_mmio_t host,
+				  unsigned int dcr_n,
+				  u64 value)
+{
+	out_be64(host.token + ((host.base + dcr_n) * host.stride), value);
 }
 
 extern u64 of_translate_dcr_address(struct device_node *dev,
