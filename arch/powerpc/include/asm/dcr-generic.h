@@ -39,8 +39,10 @@ extern dcr_host_t dcr_map_generic(struct device_node *dev, unsigned int dcr_n,
 extern void dcr_unmap_generic(dcr_host_t host, unsigned int dcr_c);
 
 extern u32 dcr_read_generic(dcr_host_t host, unsigned int dcr_n);
+extern u64 dcr_read_generic64(dcr_host_t host, unsigned int dcr_n);
 
 extern void dcr_write_generic(dcr_host_t host, unsigned int dcr_n, u32 value);
+extern void dcr_write_generic64(dcr_host_t host, unsigned int dcr_n, u64 value);
 
 #endif /* __ASSEMBLY__ */
 #endif /* __KERNEL__ */

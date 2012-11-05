@@ -112,6 +112,18 @@ u32 dcr_read_generic(dcr_host_t host, unsigned int dcr_n)
 }
 EXPORT_SYMBOL_GPL(dcr_read_generic);
 
+u64 dcr_read_generic64(dcr_host_t host, unsigned int dcr_n)
+{
+	if (host.type == DCR_HOST_NATIVE)
+		return dcr_read_native(host.host.native, dcr_n);
+	else if (host.type == DCR_HOST_MMIO)
+		return dcr_read_mmio64(host.host.mmio, dcr_n);
+	else /* host.type == DCR_HOST_INVALID */
+		WARN_ON(true);
+	return 0;
+}
+EXPORT_SYMBOL_GPL(dcr_read_generic64);
+
 void dcr_write_generic(dcr_host_t host, unsigned int dcr_n, u32 value)
 {
 	if (host.type == DCR_HOST_NATIVE)
@@ -122,6 +134,17 @@ void dcr_write_generic(dcr_host_t host, unsigned int dcr_n, u32 value)
 		WARN_ON(true);
 }
 EXPORT_SYMBOL_GPL(dcr_write_generic);
+
+void dcr_write_generic64(dcr_host_t host, unsigned int dcr_n, u64 value)
+{
+	if (host.type == DCR_HOST_NATIVE)
+		dcr_write_native(host.host.native, dcr_n, value);
+	else if (host.type == DCR_HOST_MMIO)
+		dcr_write_mmio(host.host.mmio, dcr_n, value);
+	else /* host.type == DCR_HOST_INVALID */
+		WARN_ON(true);
+}
+EXPORT_SYMBOL_GPL(dcr_write_generic64);
 
 #endif /* defined(CONFIG_PPC_DCR_NATIVE) && defined(CONFIG_PPC_DCR_MMIO) */
 
