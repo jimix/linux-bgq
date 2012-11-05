@@ -37,46 +37,46 @@ static inline bool dcr_map_ok_native(dcr_host_native_t host)
 #define dcr_map_native(dev, dcr_n, dcr_c) \
 	((dcr_host_native_t){ .base = (dcr_n) })
 #define dcr_unmap_native(host, dcr_c)		do {} while (0)
-#define dcr_read_native(host, dcr_n)		mfdcr(dcr_n + host.base)
-#define dcr_write_native(host, dcr_n, value)	mtdcr(dcr_n + host.base, value)
+#define dcr_read_native(host, dcr_n)		mfdcrx(dcr_n + host.base)
+#define dcr_write_native(host, dcr_n, val)	mtdcrx(dcr_n + host.base, val)
 
 /* Table based DCR accessors */
-extern void __mtdcr(unsigned int reg, unsigned int val);
-extern unsigned int __mfdcr(unsigned int reg);
+extern void __mtdcr(unsigned int reg, unsigned long val);
+extern unsigned long __mfdcr(unsigned int reg);
 
 /* mfdcrx/mtdcrx instruction based accessors. We hand code
  * the opcodes in order not to depend on newer binutils
  */
-static inline unsigned int mfdcrx(unsigned int reg)
+static inline unsigned long mfdcrx(unsigned int reg)
 {
-	unsigned int ret;
+	unsigned long ret;
 	asm volatile(".long 0x7c000206 | (%0 << 21) | (%1 << 16)"
 		     : "=r" (ret) : "r" (reg));
 	return ret;
 }
 
-static inline void mtdcrx(unsigned int reg, unsigned int val)
+static inline void mtdcrx(unsigned int reg, unsigned long val)
 {
 	asm volatile(".long 0x7c000306 | (%0 << 21) | (%1 << 16)"
 		     : : "r" (val), "r" (reg));
 }
 
 #define mfdcr(rn)						\
-	({unsigned int rval;					\
+	({unsigned long rval;					\
 	if (__builtin_constant_p(rn) && rn < 1024)		\
 		asm volatile("mfdcr %0," __stringify(rn)	\
-		              : "=r" (rval));			\
+			     : "=r" (rval));			\
 	else if (likely(cpu_has_feature(CPU_FTR_INDEXED_DCR)))	\
 		rval = mfdcrx(rn);				\
 	else							\
 		rval = __mfdcr(rn);				\
-	rval;})
+	rval; })
 
 #define mtdcr(rn, v)						\
 do {								\
 	if (__builtin_constant_p(rn) && rn < 1024)		\
 		asm volatile("mtdcr " __stringify(rn) ",%0"	\
-			      : : "r" (v)); 			\
+			     : : "r" (v));			\
 	else if (likely(cpu_has_feature(CPU_FTR_INDEXED_DCR)))	\
 		mtdcrx(rn, v);					\
 	else							\
@@ -146,9 +146,10 @@ static inline void __dcri_clrset(int base_addr, int base_data, int reg,
 					 DCRN_ ## base ## _CONFIG_DATA,	\
 					 reg, data)
 
-#define dcri_clrset(base, reg, clr, set)	__dcri_clrset(DCRN_ ## base ## _CONFIG_ADDR,	\
-							      DCRN_ ## base ## _CONFIG_DATA,	\
-							      reg, clr, set)
+#define dcri_clrset(base, reg, clr, set)				\
+	__dcri_clrset(DCRN_ ## base ## _CONFIG_ADDR,			\
+		      DCRN_ ## base ## _CONFIG_DATA,			\
+		      reg, clr, set)
 
 #endif /* __ASSEMBLY__ */
 #endif /* __KERNEL__ */

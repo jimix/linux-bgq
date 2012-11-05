@@ -16,8 +16,7 @@
 #define DCR_ACCESS_PROLOG(table) \
 	cmpli	cr0,r3,1024;	 \
 	rlwinm  r3,r3,4,18,27;   \
-	lis     r5,table@h;      \
-	ori     r5,r5,table@l;   \
+	LOAD_REG_ADDR(r5,table); \
 	add     r3,r3,r5;        \
 	bge-	1f;		 \
 	mtctr   r3;              \
