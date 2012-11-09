@@ -2060,6 +2060,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
 #endif /* CONFIG_PPC32 */
 #endif /* CONFIG_E500 */
 
+#ifdef CONFIG_PPC_BOOK3E_64
 #ifdef CONFIG_PPC_A2
 	{	/* Standard A2 (>= DD2) + FPU core */
 		.pvr_mask		= 0xffff0000,
@@ -2076,6 +2077,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
 		.machine_check		= machine_check_generic,
 		.platform		= "ppca2",
 	},
+#endif /* CONFIG_PPC_A2 */
 	{	/* This is a default entry to get going, to be replaced by
 		 * a real one at some stage
 		 */
@@ -2096,7 +2098,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
 		.machine_check		= machine_check_generic,
 		.platform		= "power6",
 	},
-#endif /* CONFIG_PPC_A2 */
+#endif /* CONFIG_PPC_BOOK3E_64 */
 };
 
 static struct cpu_spec the_cpu_spec;
