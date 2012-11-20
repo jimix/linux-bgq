@@ -536,7 +536,7 @@ kernel_dbg_exc:
 	ld	r10,PACA_EXDBG+EX_R10(r13)	/* restore registers */
 	ld	r11,PACA_EXDBG+EX_R11(r13)
 	mfspr	r13,SPRN_SPRG_DBG_SCRATCH
-	rfdi
+	PPC_RFDI
 
 	/* Normal debug exception */
 	/* XXX We only handle coming from userspace for now since we can't
