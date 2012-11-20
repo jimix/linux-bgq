@@ -12,7 +12,8 @@
 #define mfdcrx(rn) \
 	({	\
 		unsigned long rval; \
-		asm volatile("mfdcrx %0,%1" : "=r"(rval) : "r"(rn)); \
+		asm volatile(".long 0x7c000206 | (%0 << 21) | (%1 << 16)" \
+			     : "=r"(rval) : "r"(rn));	\
 		rval; \
 	})
 
