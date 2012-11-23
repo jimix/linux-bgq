@@ -119,3 +119,11 @@ config HVCS
 	  which will also be compiled when this driver is built as a
 	  module.
 
+config HVC_BGQ
+	bool "IBM Blue Gene/Q Firmware Console support"
+	depends on PPC_BGQ
+	select HVC_DRIVER
+	select HVC_IRQ
+	default y
+	help
+	  IBM Blue Gene/Q Firmware Console driver
