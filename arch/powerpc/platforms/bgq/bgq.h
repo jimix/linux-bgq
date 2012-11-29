@@ -31,4 +31,8 @@ extern int bgq_block_state(u16 status, u32 block_id);
 
 extern u32 bgq_io_reset_block_id;
 
+extern void bgq_pci_init(void);
+extern void bgq_pcibios_fixup(void);
+extern void bgq_dma_dev_setup(struct pci_dev *dev);
+
 #endif	/* __PLATFORM_BGQ_H */
