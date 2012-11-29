@@ -202,6 +202,13 @@ void start(void)
 	else
 		printf(" using OF tree (promptr=%p)\n\r", loader_info.promptr);
 
+	/*
+	 * if the boot program is going to spinup threads, do it now
+	 * so we can use the kexec logic in the kernel
+	 */
+	if (platform_ops.spin_threads)
+		platform_ops.spin_threads(vmlinux.addr, vmlinux.size);
+
 	if (console_ops.close)
 		console_ops.close();
 
