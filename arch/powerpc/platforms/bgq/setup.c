@@ -124,7 +124,7 @@ static void __init bgq_setup_arch(void)
 	bgq_setup_cpu(0);
 
 #ifdef CONFIG_PCI
-	/* call bgq_pci_init(); here */
+	bgq_pci_init();
 #endif
 }
 
@@ -148,4 +148,8 @@ define_machine(bgq) {
 	.panic		= bgq_panic,
 	.calibrate_decr	= generic_calibrate_decr,
 	.progress	= udbg_progress,
+#ifdef CONFIG_PCI
+	.pcibios_fixup = bgq_pcibios_fixup,
+	.pci_dma_dev_setup = bgq_dma_dev_setup,
+#endif
 };

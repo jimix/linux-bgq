@@ -1,3 +1,5 @@
+#ifndef __PLATFORM_BGQ_BIC_H
+#define __PLATFORM_BGQ_BIC_H
 
 #define BGQ_DCR_GEA_INTERRUPT_MAP0 0
 #define BGQ_DCR_GEA_INTERRUPT_MAP(x) (BGQ_DCR_GEA_INTERRUPT_MAP0 + (x))
@@ -64,3 +66,9 @@ struct bgq_bic_puea {
 #define BQG_IRQ_C2C_INT_MASK_BIT0		0x0000000000000002ULL
 #define BQG_IRQ_C2C_INT_MASK_BIT1		0x0000000000000001ULL
 #define BGQ_IPI_MASK (BQG_IRQ_C2C_INT_MASK_BIT0 | BQG_IRQ_C2C_INT_MASK_BIT1)
+
+extern void bgq_msi_init(dcr_host_t devbus);
+extern int bgq_msi_get_irq(u8 msi_reg);
+extern int bgq_msi_get_irq(u8 msi_reg);
+
+#endif /* __PLATFORM_BGQ_BIG_H */

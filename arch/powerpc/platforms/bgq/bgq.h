@@ -28,4 +28,8 @@ extern void bgq_panic(char *s);
 extern int bgq_ras_puts(u64 id, const char *s);
 extern int bgq_block_state(u16 status);
 
+extern void bgq_pci_init(void);
+extern void bgq_pcibios_fixup(void);
+extern void bgq_dma_dev_setup(struct pci_dev *dev);
+
 #endif	/* __PLATFORM_BGQ_H */

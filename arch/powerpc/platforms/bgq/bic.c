@@ -30,8 +30,6 @@
 #include "bgq.h"
 #include "bic.h"
 
-#undef CONFIG_PCI_MSI
-
 static const char *bgq_pic_compat = "ibm,bgq-bic";
 
 static const char * const bgq_irq_name[] = {
@@ -132,10 +130,10 @@ static unsigned int bgq_get_irq(void)
 	isum = bgq_ext_int_summary(bic->puea, tid);
 
 #ifdef CONFIG_SMP
-	/* only do IPIs right now. */
 	if (isum & BGQ_IPI_MASK)
 		return bic->vipi;
 #endif
+
 #ifdef CONFIG_PCI_MSI
 	{
 		int msi;
@@ -146,7 +144,6 @@ static unsigned int bgq_get_irq(void)
 		}
 	}
 #endif
-
 
 	if (isum & BGQ_IRQ_DEVBUS_MASK_BIT) {
 		u64 db = dcr_read64(bic->dcr_devbus,
@@ -317,6 +314,7 @@ static struct irq_chip bgq_irq_chip = {
 static unsigned bgq_bic_sense_map[] = {
 	[0] = IRQ_TYPE_LEVEL_LOW,
 	[1] = IRQ_TYPE_LEVEL_HIGH,
+	[2] = IRQ_TYPE_EDGE_RISING,
 };
 
 static int bgq_host_map(struct irq_domain *h, unsigned int virq,
