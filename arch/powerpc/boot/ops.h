@@ -30,6 +30,7 @@ struct platform_ops {
 	void *	(*realloc)(void *ptr, unsigned long size);
 	void	(*exit)(void);
 	void *	(*vmlinux_alloc)(unsigned long size);
+	void	(*spin_threads)(void *addr, unsigned long size);
 };
 extern struct platform_ops platform_ops;
 
