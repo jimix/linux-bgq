@@ -8,4 +8,5 @@ config PPC_BGQ
 	select PPC_DCR_MMIO
 	select PPC_SMP_MUXED_IPI if SMP
 	select HVC_BGQ
+	select PPC_QPX
 	default n

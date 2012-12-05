@@ -2078,7 +2078,7 @@ static struct cpu_spec __initdata cpu_specs[] = {
 		.pvr_value		= 0x00490000,
 		.cpu_name		= "BGQ A2 (>= DD2)",
 		/* The core supports ICSWX and DBELL but the chip does not */
-		.cpu_features		= ((CPU_FTRS_A2) &
+		.cpu_features		= (((CPU_FTRS_A2) | CPU_FTR_QPX) &
 					   ~(CPU_FTR_ICSWX | CPU_FTR_DBELL)),
 		.cpu_user_features	= COMMON_USER_PPC64,
 		/* The core supports TLBIVAX but the chip does not */

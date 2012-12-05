@@ -25,23 +25,35 @@
 #include <asm/asm-offsets.h>
 #include <asm/ptrace.h>
 
-#ifdef CONFIG_VSX
+#if defined(CONFIG_VSX) || defined(CONFIG_PPC_QPX)
 #define REST_32FPVSRS(n,c,base)						\
 BEGIN_FTR_SECTION							\
 	b	2f;							\
-END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+END_FTR_SECTION_IFSET(CPU_FTR_VSX | CPU_FTR_QPX);			\
 	REST_32FPRS(n,base);						\
 	b	3f;							\
-2:	REST_32VSRS(n,c,base);						\
+2:									\
+BEGIN_FTR_SECTION							\
+	REST_32VSRS(n,c,base);						\
+END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+BEGIN_FTR_SECTION							\
+	REST_32QRS(n,c,base);						\
+END_FTR_SECTION_IFSET(CPU_FTR_QPX);					\
 3:
 
 #define SAVE_32FPVSRS(n,c,base)						\
 BEGIN_FTR_SECTION							\
 	b	2f;							\
-END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+END_FTR_SECTION_IFSET(CPU_FTR_VSX | CPU_FTR_QPX);			\
 	SAVE_32FPRS(n,base);						\
 	b	3f;							\
-2:	SAVE_32VSRS(n,c,base);						\
+2:									\
+BEGIN_FTR_SECTION							\
+	SAVE_32VSRS(n,c,base);						\
+END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+BEGIN_FTR_SECTION							\
+	SAVE_32QRS(n,c,base);						\
+END_FTR_SECTION_IFSET(CPU_FTR_QPX);					\
 3:
 #else
 #define REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
@@ -58,10 +70,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
 _GLOBAL(load_up_fpu)
 	mfmsr	r5
 	ori	r5,r5,MSR_FP
-#ifdef CONFIG_VSX
+#if defined(CONFIG_VSX) || defined(CONFIG_PPC_QPX)
+	/* they are the same MSR bit */
 BEGIN_FTR_SECTION
 	oris	r5,r5,MSR_VSX@h
-END_FTR_SECTION_IFSET(CPU_FTR_VSX)
+END_FTR_SECTION_IFSET(CPU_FTR_VSX | CPU_FTR_QPX)
 #endif
 	SYNC
 	MTMSRD(r5)			/* enable use of fpu now */
@@ -92,7 +105,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
 #endif /* CONFIG_SMP */
 	/* enable use of FP after return */
 #ifdef CONFIG_PPC32
-	mfspr	r5,SPRN_SPRG_THREAD		/* current task's THREAD (phys) */
+	mfspr	r5,SPRN_SPRG_THREAD	/* current task's THREAD (phys) */
 	lwz	r4,THREAD_FPEXC_MODE(r5)
 	ori	r9,r9,MSR_FP		/* enable FP for current */
 	or	r9,r9,r4
@@ -125,10 +138,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
 _GLOBAL(giveup_fpu)
 	mfmsr	r5
 	ori	r5,r5,MSR_FP
-#ifdef CONFIG_VSX
+#if defined(CONFIG_VSX) || defined(CONFIG_PPC_QPX)
+	/* same MSR bit for both */
 BEGIN_FTR_SECTION
 	oris	r5,r5,MSR_VSX@h
-END_FTR_SECTION_IFSET(CPU_FTR_VSX)
+END_FTR_SECTION_IFSET(CPU_FTR_VSX | CPU_FTR_QPX)
 #endif
 	SYNC_601
 	ISYNC_601
@@ -146,10 +160,10 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX)
 	beq	1f
 	PPC_LL	r4,_MSR-STACK_FRAME_OVERHEAD(r5)
 	li	r3,MSR_FP|MSR_FE0|MSR_FE1
-#ifdef CONFIG_VSX
+#if defined(CONFIG_VSX) || defined(CONFIG_PPC_QPX)
 BEGIN_FTR_SECTION
 	oris	r3,r3,MSR_VSX@h
-END_FTR_SECTION_IFSET(CPU_FTR_VSX)
+END_FTR_SECTION_IFSET(CPU_FTR_VSX | CPU_FTR_QPX)
 #endif
 	andc	r4,r4,r3		/* disable FP for previous task */
 	PPC_STL	r4,_MSR-STACK_FRAME_OVERHEAD(r5)
