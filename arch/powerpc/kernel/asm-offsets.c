@@ -97,7 +97,6 @@ int main(void)
 	DEFINE(THREAD_USED_VR, offsetof(struct thread_struct, used_vr));
 #endif /* CONFIG_ALTIVEC */
 #ifdef CONFIG_VSX
-	DEFINE(THREAD_VSR0, offsetof(struct thread_struct, fpr));
 	DEFINE(THREAD_USED_VSR, offsetof(struct thread_struct, used_vsr));
 #endif /* CONFIG_VSX */
 #ifdef CONFIG_PPC64
