@@ -45,8 +45,8 @@ _GLOBAL(copypage_power7)
 .machine "power4"
 	dcbt	r0,r4,0b01000
 	dcbt	r0,r7,0b01010
-	dcbtst	r0,r9,0b01000
-	dcbtst	r0,r10,0b01010
+	PPC_DCBTST(__REG_R0, __REG_R9, 8)	/* dcbtst r0,r9,0b01000 */
+	PPC_DCBTST(__REG_R0, __REG_R10,10)	/* dcbtst r0,r10,0b01010 */
 	eieio
 	dcbt	r0,r8,0b01010	/* GO */
 .machine pop

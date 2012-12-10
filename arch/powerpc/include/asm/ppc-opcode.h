@@ -85,6 +85,7 @@
 #define PPC_INST_DCBA			0x7c0005ec
 #define PPC_INST_DCBA_MASK		0xfc0007fe
 #define PPC_INST_DCBAL			0x7c2005ec
+#define PPC_INST_DCBTST			0x7c0001ec
 #define PPC_INST_DCBZL			0x7c2007ec
 #define PPC_INST_ISEL			0x7c00001e
 #define PPC_INST_ISEL_MASK		0xfc00003e
@@ -198,6 +199,7 @@
 #define __PPC_MB(s)	(((s) & 0x1f) << 6)
 #define __PPC_ME(s)	(((s) & 0x1f) << 1)
 #define __PPC_BI(s)	(((s) & 0x1f) << 16)
+#define __PPC_TH(th)	___PPC_RS(th)
 
 /*
  * Only use the larx hint bit on 64bit CPUs. e500v1/v2 based CPUs will treat a
@@ -212,6 +214,9 @@
 /* Deal with instructions that older assemblers aren't aware of */
 #define	PPC_DCBAL(a, b)		stringify_in_c(.long PPC_INST_DCBAL | \
 					__PPC_RA(a) | __PPC_RB(b))
+#define	PPC_DCBTST(a, b, th)	stringify_in_c(.long PPC_INST_DCBTST | \
+					__PPC_TH(th) | \
+					___PPC_RA(a) | ___PPC_RB(b))
 #define	PPC_DCBZL(a, b)		stringify_in_c(.long PPC_INST_DCBZL | \
 					__PPC_RA(a) | __PPC_RB(b))
 #define PPC_LDARX(t, a, b, eh)	stringify_in_c(.long PPC_INST_LDARX | \
