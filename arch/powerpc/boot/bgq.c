@@ -210,11 +210,12 @@ struct bgq_fw_domain_descriptor {
 };
 
 /* Set initrd & bootargs information in device tree. */
-static int bgq_fixup_chosen(const char *options, u32 rd_addr)
+static int bgq_fixup_chosen(const char *options)
 {
 	void *node;
 	int rc;
 	u32 *rd;
+	unsigned long rd_addr = BGQ_RAMDISK_ADDR;
 
 	node = finddevice("/chosen");
 
@@ -228,14 +229,27 @@ static int bgq_fixup_chosen(const char *options, u32 rd_addr)
 	 * address (0x1000000).	 It is preceeded by a 4-byte magic value
 	 * and a 4-byte big endian length.
 	 */
+	if ((u32)_end > rd_addr) {
+		printf("WARNING: If you loaded your ramdisk below %p you will not boot\n",
+		       _end);
+		rd_addr <<= 1;
+		printf("Trying 0x%08lx for ramdisk\n", rd_addr);
+	}
 	rd = (u32 *)rd_addr;
-
-	if (rd[0] == 0xf0e1d2c3UL && rd[1] > 0) {
+	if (!(rd[0] == 0xf0e1d2c3UL && rd[1] > 0)) {
+		rd_addr <<= 1;
+		printf("Ramdisk not at 0x%p, trying 0x%08lx\n", rd, rd_addr);
+		rd = (u32 *)rd_addr;
+	}
+	if (rd[0] == 0xf0e1d2c3UL && rd[1] > 0)	{
 		u32 initrd_start = rd_addr + 8;
 		u32 initrd_end = initrd_start + rd[1];
 
+		printf("Found ramdisk at 0x%p\n", rd);
 		setprop_val(node, "linux,initrd-start", initrd_start);
 		setprop_val(node, "linux,initrd-end", initrd_end);
+	} else {
+		printf("WARNING: no ramdisk found\n");
 	}
 
 	/* If a kernel command line is specified then use that. */
@@ -394,7 +408,7 @@ static void bgq_fixups(void)
 
 	/* fixup the rest */
 	bgq_fixup_bgq_soc(&bgd, &bgp);
-	bgq_fixup_chosen(bgd.options, BGQ_RAMDISK_ADDR);
+	bgq_fixup_chosen(bgd.options);
 	bgq_fixup_cpus(bgd.core_mask);
 	bgq_fixup_pcie(bgp.kernel_config.node_config);
 
