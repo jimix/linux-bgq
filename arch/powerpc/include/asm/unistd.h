@@ -64,5 +64,10 @@
 #define cond_syscall(x) \
 	asmlinkage long x (void) __attribute__((weak,alias("sys_ni_syscall")))
 
+/*
+ * Unimplemented (or alternatively implemented) syscalls
+ */
+#define __IGNORE_kcmp
+
 #endif		/* __ASSEMBLY__ */
 #endif /* _ASM_POWERPC_UNISTD_H_ */
