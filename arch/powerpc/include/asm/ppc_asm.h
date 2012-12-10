@@ -153,6 +153,30 @@ END_FW_FTR_SECTION_IFSET(FW_FEATURE_SPLPAR)
 #define REST_32VSRSU(n,b,base)	REST_16VSRSU(n,b,base); REST_16VSRSU(n+16,b,base)
 
 /*
+ * BGQ style QPX load/store instructions, since we cannot depend on the
+ * compiler knowing them.
+ *
+ * If we have the QPX we made sure that FPR is bigger to accomodate it.
+ */
+#define QVLFDXA(QRT,RA,RB)	\
+	.long (0x7c00048f | ((QRT) << 21) | ((RA) << 16) | ((RB) << 11))
+#define REST_QR(n,b,base)	li b,THREAD_FPR0+(32*(n)); QVLFDXA(n,base,b)
+#define REST_2QRS(n,b,base)	REST_QR(n,b,base); REST_QR(n+1,b,base)
+#define REST_4QRS(n,b,base)	REST_2QRS(n,b,base); REST_2QRS(n+2,b,base)
+#define REST_8QRS(n,b,base)	REST_4QRS(n,b,base); REST_4QRS(n+4,b,base)
+#define REST_16QRS(n,b,base)	REST_8QRS(n,b,base); REST_8QRS(n+8,b,base)
+#define REST_32QRS(n,b,base)	REST_16QRS(n,b,base); REST_16QRS(n+16,b,base)
+
+#define QVSTFDXA(QRS,RA,RB)	\
+	.long (0x7c00058f | ((QRS) << 21) | ((RA) << 16) | ((RB) << 11))
+#define SAVE_QR(n,b,base)	li b,THREAD_FPR0+(16*(n));  QVSTFDXA(n,base,b)
+#define SAVE_2QRS(n,b,base)	SAVE_QR(n,b,base); SAVE_QR(n+1,b,base)
+#define SAVE_4QRS(n,b,base)	SAVE_2QRS(n,b,base); SAVE_2QRS(n+2,b,base)
+#define SAVE_8QRS(n,b,base)	SAVE_4QRS(n,b,base); SAVE_4QRS(n+4,b,base)
+#define SAVE_16QRS(n,b,base)	SAVE_8QRS(n,b,base); SAVE_8QRS(n+8,b,base)
+#define SAVE_32QRS(n,b,base)	SAVE_16QRS(n,b,base); SAVE_16QRS(n+16,b,base)
+
+/*
  * b = base register for addressing, o = base offset from register of 1st EVR
  * n = first EVR, s = scratch
  */
