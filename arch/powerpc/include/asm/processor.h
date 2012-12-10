@@ -12,7 +12,9 @@
 
 #include <asm/reg.h>
 
-#ifdef CONFIG_VSX
+#if defined(CONFIG_PPC_QPX)
+#define TS_FPRWIDTH 4
+#elif defined(CONFIG_VSX)
 #define TS_FPRWIDTH 2
 #else
 #define TS_FPRWIDTH 1
@@ -194,7 +196,7 @@ struct thread_struct {
 	unsigned long	dvc2;
 #endif
 #endif
-	/* FP and VSX 0-31 register set */
+	/* FP, VSX and QPX 0-31 register set */
 	double		fpr[32][TS_FPRWIDTH];
 	struct {
 
