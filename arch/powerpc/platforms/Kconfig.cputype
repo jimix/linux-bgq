@@ -260,6 +260,20 @@ config VSX
 
 	  If in doubt, say Y here.
 
+config PPC_QPX
+	bool "Quad Processing eXtention (QPX)"
+	depends on PPC_FPU
+	---help---
+
+	  This option enables kernel support for the QPX extention and
+	  is intended for processors that support it, usually an IBM
+	  Blue Gene processor.  Turning it on does not effect other
+	  processors but it does add code and will quadruple the per
+	  thread save and restore area for the FPU (hense the name).
+	  If you have enabled VSX it will only double the space.
+
+	  If in doubt, say N here.
+
 config PPC_ICSWX
 	bool "Support for PowerPC icswx coprocessor instruction"
 	depends on POWER4 || PPC_A2
