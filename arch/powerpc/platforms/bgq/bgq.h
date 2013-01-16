@@ -25,8 +25,11 @@ extern void bgq_mailbox_init(void);
 extern void bgq_halt(void);
 extern void bgq_restart(char *s);
 extern void bgq_panic(char *s);
-extern int bgq_ras_puts(u64 id, const char *s);
-extern int bgq_block_state(u16 status);
+extern int bgq_ras_puts(u32 id, const char *s);
+extern int bgq_ras_write(u32 id, const void *data, u16 len);
+extern int bgq_block_state(u16 status, u32 block_id);
+
+extern u32 bgq_io_reset_block_id;
 
 extern void bgq_pci_init(void);
 extern void bgq_pcibios_fixup(void);

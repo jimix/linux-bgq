@@ -83,10 +83,13 @@ struct bgq_mailbox_header {
 };
 
 #define BGQ_OUTBOX_STDOUT	0x0002 /*  stdout message */
+#define BGQ_OUTBOX_RAS_BINARY	0x0004 /*  RAS binary message */
 #define BGQ_OUTBOX_TERMINATE	0x0008 /*  termination Request */
-#define BGQ_OUTBOX_RAS_ASCII	0x0080 /*  RAS message */
+#define BGQ_OUTBOX_RAS_ASCII	0x0080 /*  RAS ASCII message */
 #define BGQ_OUTBOX_BLOCK_STATE	0x0400 /*  stderr message */
 #define BGQ_OUTBOX_STDERR	0x0100 /*  stderr message */
+
+#define BGQ_OUTBOX_RAS_MAX	2048
 
 void __init bgq_mailbox_init(void)
 {
@@ -144,6 +147,8 @@ void __init bgq_mailbox_init(void)
 	spin_lock_init(&bm->inbox_lock);
 }
 
+u32 bgq_io_reset_block_id;
+EXPORT_SYMBOL(bgq_io_reset_block_id);
 
 #define BGQ_INBOX_SYSREQ_SHUTDOWN		1
 #define BGQ_INBOX_SYSREQ_SHUTDOWN_IO_LINK	2
@@ -152,8 +157,6 @@ static int bgq_inbox_sysreq(const void __iomem *srp, unsigned len)
 	const u32 __iomem *sr = srp;
 	u32 req_id;
 	u32 block_id;
-
-	BUG_ON(len != (sizeof(req_id) + sizeof(block_id)));
 
 	/* this will never wrap in the ring queue */
 	req_id = ACCESS_ONCE(sr[0]);
@@ -168,6 +171,10 @@ static int bgq_inbox_sysreq(const void __iomem *srp, unsigned len)
 		block_id = ACCESS_ONCE(sr[0]);
 		pr_info("%s: need to shutdown block id: 0x%x\n", __func__,
 			block_id);
+		bgq_io_reset_block_id = block_id;
+		/* we expect it to change, so wait for it */
+		while (bgq_io_reset_block_id == block_id)
+			barrier();
 		return 0;
 	}
 	pr_err("%s: Unhandled sysreq: 0x%x\n", __func__, req_id);
@@ -432,7 +439,8 @@ void bgq_halt(void)
 void bgq_restart(char *s)
 {
 	bgq_mailbox_out(BGQ_OUTBOX_STDOUT, __func__, sizeof(__func__) - 1);
-	bgq_mailbox_out(BGQ_OUTBOX_STDOUT, s, strlen(s));
+	if (s)
+		bgq_mailbox_out(BGQ_OUTBOX_STDOUT, s, strlen(s));
 	bgq_outbox_terminate(0);
 	for (;;)
 		continue;
@@ -440,7 +448,7 @@ void bgq_restart(char *s)
 
 #define	BGQ_OUTBOX_RAS_KERNEL_PANIC		 0xa000d
 
-int bgq_ras_puts(u64 id, const char *s)
+int bgq_ras_puts(u32 id, const char *s)
 {
 	struct ras {
 		u64 uci;
@@ -448,16 +456,48 @@ int bgq_ras_puts(u64 id, const char *s)
 		char msg[4];	/* should be 0 but we claim the pad */
 	} *r;
 	unsigned l = strlen(s);
-	unsigned sz = sizeof(*r) - sizeof(r->msg) + l;
+	unsigned sz;
+
+	if (l >  BGQ_OUTBOX_RAS_MAX)
+		l =  BGQ_OUTBOX_RAS_MAX;
+	sz = sizeof(*r) - sizeof(r->msg) + l;
 
 	r = __builtin_alloca(sz);
 
 	r->uci = 0;
 	r->id = id;
-	memcpy(r->msg, s, l);
+	strlcpy(r->msg, s, l);
 
 	return bgq_mailbox_out(BGQ_OUTBOX_RAS_ASCII, r, sz);
 }
+EXPORT_SYMBOL(bgq_ras_puts);
+
+int bgq_ras_write(u32 id, const void *data, u16 len)
+{
+	struct ras {
+		u64 uci;
+		u32 id;
+		u16 _res;
+		u16 num_details;	/* number of 64bit words in details */
+		u64 details[0];
+	} *r;
+	unsigned sz;
+	const unsigned lmax = BGQ_OUTBOX_RAS_MAX / sizeof(r->details[0]);
+
+	if (len > lmax)
+		len = lmax;
+
+	sz = sizeof(*r) + (len * sizeof(r->details[0]));
+	r = __builtin_alloca(sz);
+
+	r->uci = 0;
+	r->id = id;
+	r->_res = 0;
+	memcpy(r->details, data, (len * sizeof(r->details[0])));
+
+	return bgq_mailbox_out(BGQ_OUTBOX_RAS_BINARY, r, sz);
+}
+EXPORT_SYMBOL(bgq_ras_write);
 
 void bgq_panic(char *s)
 {
@@ -469,17 +509,21 @@ void bgq_panic(char *s)
 		continue;
 }
 
-int bgq_block_state(u16 status)
+int bgq_block_state(u16 status, u32 block_id)
 {
 	struct sb {
 		u16 status;
 		u16 __unused;
 		u32 block_id;
 	};
-	struct sb sb = { .status = status };
+	struct sb sb = {
+		.status = status,
+		.block_id = block_id
+	};
 
 	return bgq_mailbox_out(BGQ_OUTBOX_BLOCK_STATE, &sb, sizeof(sb));
 }
+EXPORT_SYMBOL(bgq_block_state);
 
 static void bgq_stdout_flush(void)
 {
