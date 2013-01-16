@@ -64,7 +64,7 @@ static ssize_t bgq_bs_write(struct file *file, const char __user *in,
 		status = BGQ_BS_HALTED;
 		break;
 	}
-	rc = bgq_block_state(status);
+	rc = bgq_block_state(status, 0);
 	if (rc < 0)
 		return rc;
 	BUG_ON(rc > 0);
